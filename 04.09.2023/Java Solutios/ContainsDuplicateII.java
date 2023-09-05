@@ -1,77 +1,43 @@
-import java.util.*;
+import java.util.HashMap;
 
-public class MoveAllZeroAtEnd {
-    // Bruteforce
-    public static void moveZeroAtEnd(int arr[], int n) {
-        ArrayList<Integer> list = new ArrayList<>();
-
-        for(int i=0; i<n; i++) {
-            if(arr[i] != 0) {
-                list.add(arr[i]);
+public class ContainsDuplicateII {
+    public static boolean containsDuplicate(int[] nums, int k) {
+        // Bruteforce
+        for(int i=0; i<nums.length; i++) {
+            for(int j=i+1; j<nums.length; j++) {
+                if(nums[i] == nums[j]) {
+                    if(Math.abs(j-i) <= k) {
+                        return true;
+                    }
+                }
             }
         }
-
-        // Pust into orginal array
-        Arrays.fill(arr, 0);
-        for(int i=0; i<list.size(); i++) {
-            arr[i] = list.get(i);
-        }
-
-    }
-    public static void swap(int arr[], int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-    public static void pushZerosToEnd(int[] arr, int n) {
-        // find first zero index
-        int zero = -1;
-
-        for(int i=0; i<n; i++) {
-            if(arr[i] == 0) {
-                zero = i;
-                break;
-            }
-        }
-
-        if(zero == -1) {  // non zero array
-            return;
-        }
-
-        // swap
-
-        for(int i=zero+1; i<n; i++) {
-            if(arr[i] != 0) {
-                swap(arr, i, zero);
-                zero++;
-            }
-        }
-
-        /*
-        int i=0;
-        int j=0;
-        for(int j=0; j<n; j++) {
-            if(arr[j] != 0) {
-                swap(arr[i],arr[j]);
-                i++;
-            }
-        }
-         */
+        return false;
     }
 
-    
-
+    // Optimal
+    public static boolean containsNearbyDuplicate(int[] nums, int k) {
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        
+        for(int i=0; i<nums.length; i++) {
+            int curr = nums[i];
+            if(map.containsKey(curr)) {
+                if(Math.abs(i-map.get(curr)) <= k) {
+                    return true;
+                } else {
+                    map.put(curr,i);
+                }
+            } else {
+                map.put(curr, i);
+            }
+        }
+        return false;
+    }
     public static void main(String[] args) {
-        int Arr[] = {3, 5, 0, 0, 4};
-        int n = Arr.length;
+        int nums[] ={1,2,3,1,2,3};
+        int k = 2;
 
-        // moveZeroAtEnd(Arr, n);
-
-        pushZerosToEnd(Arr, n);
-
-
-        for (int i : Arr) {
-            System.out.print(i+" ");
-        }
+        System.out.println(containsNearbyDuplicate(nums, k));
     }
 }
